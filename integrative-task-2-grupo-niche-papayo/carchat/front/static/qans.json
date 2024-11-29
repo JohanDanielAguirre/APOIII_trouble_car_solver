@@ -1,0 +1,119 @@
+{
+  "categories": {
+    "starting_problems": {
+      "name": "Starting Problems",
+      "questions": [
+        {
+          "question": "Does the sound switch make some strange sound like a kind of squeak?",
+          "yes_response": "The solution is to service it.",
+          "next": null
+        },
+        {
+          "question": "Does the switch make a single dry sound and does not even try to start?",
+          "yes_response": "A battery test should be performed first.",
+          "next": {
+            "question": "Is the battery charged?",
+            "yes_response": "The problem might be related to another component.",
+            "no_response": "The battery needs to be charged."
+          }
+        },
+        {
+          "question": "Does the switch look good physically (no wear marks or loose key)?",
+          "yes_response": "A test of the switch should be performed, as it may be a problem with the key.",
+          "next": null
+        },
+        {
+          "question": "Is there a scraping or squeaking sound when the ignition is turned on?",
+          "yes_response": "The ignition system should be checked and replaced if necessary.",
+          "next": null
+        }
+      ]
+    },
+    "air_conditioning": {
+      "name": "Air Conditioning Problems",
+      "questions": [
+        {
+          "question": "Is the air conditioner releasing bad odors?",
+          "yes_response": "The air conditioning filter should be checked as it may be clogged. It can be serviced or replaced.",
+          "next": {
+            "question": "Is the system in internal air mode?",
+            "yes_response": "This is not the cause; proceed to check other components.",
+            "no_response": "Switching to internal air mode should solve the problem."
+          }
+        },
+        {
+          "question": "Do the fuses with the A/C badge look black or smell burnt?",
+          "yes_response": "The solution is to replace them.",
+          "next": null
+        },
+        {
+          "question": "Are the electrical systems of the car sluggish or slow?",
+          "yes_response": "The connection that takes the current to the compressor might be faulty and should be checked.",
+          "next": null
+        }
+      ]
+    },
+    "vehicle_lights": {
+      "name": "Vehicle Lights Problems",
+      "questions": [
+        {
+          "question": "Did you verify that the light ignition system is pressed correctly?",
+          "yes_response": "Proceed to check the light connectors.",
+          "no_response": "Press the ignition system correctly to solve the issue.",
+          "next": null
+        },
+        {
+          "question": "Are the light connectors properly connected?",
+          "yes_response": "Continue to check the fuses.",
+          "no_response": "Reconnect the light connectors properly."
+        },
+        {
+          "question": "Are the fuses labeled 'lights' black or burnt?",
+          "yes_response": "They need to be replaced.",
+          "next": null
+        }
+      ]
+    },
+    "engine_problems": {
+      "name": "Engine Problems",
+      "questions": [
+        {
+          "question": "Are the hoses connecting to the engine leaking?",
+          "yes_response": "The leaks should be sealed.",
+          "next": null
+        },
+        {
+          "question": "Is the fuel level low (<1/4 tank or reserve)?",
+          "yes_response": "The fuel level should be raised to at least 1/4 tank.",
+          "next": null
+        },
+        {
+          "question": "Do the injectors look blunt or lack rubbers?",
+          "yes_response": "The injectors should be changed.",
+          "next": null
+        }
+      ]
+    },
+    "electrical_problems": {
+      "name": "Electrical Problems",
+      "questions": [
+        {
+          "question": "Is the battery charged?",
+          "yes_response": "This is not the problem; proceed to check the alternator.",
+          "no_response": "The solution is to charge the battery.",
+          "next": null
+        },
+        {
+          "question": "Does the alternator look good physically (no water damage marks or missing parts)?",
+          "yes_response": "This is not the issue; proceed to check the wiring.",
+          "no_response": "The alternator might need replacement."
+        },
+        {
+          "question": "Does the wiring look good physically?",
+          "yes_response": "An expert electrician should be called to test for shorts or leaks.",
+          "no_response": "Call an electrician to replace the wiring."
+        }
+      ]
+    }
+  }
+}

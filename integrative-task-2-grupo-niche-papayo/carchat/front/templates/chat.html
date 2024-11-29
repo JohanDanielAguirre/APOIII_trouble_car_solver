@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car ChatBot - Chat</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .user-message {
+            background-color: #d1e7dd;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: right;
+        }
+        .bot-response {
+            background-color: #f8d7da;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .chat-container {
+            height: calc(100vh - 150px);
+            overflow-y: auto;
+        }
+        .fixed-input {
+            position: fixed;
+            bottom: 0;
+            width: 75%;
+            background-color: #f8f9fa;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body class="container-fluid" style="padding: 0%; background-image: url(https://e1.pxfuel.com/desktop-wallpaper/581/154/desktop-wallpaper-backgrounds-for-login-page-login-page.jpg); background-size: cover">
+    <div class="row no-gutters" style="height: 100vh;">
+        <!-- Panel Izquierdo -->
+        <div class="col-md-3 bg-light d-flex flex-column">
+            <div class="p-3">
+                <button class="btn btn-danger btn-block mb-3" onclick="window.location.href='{% url 'logout' %}'">Logout</button>
+                <button class="btn btn-secondary btn-block mb-3" onclick="window.location.href='{% url 'chat_history' %}'">Historial</button>
+                <div class="mt-auto p-3 text-center">
+                    <h5>{{ usuario }}</h5>
+                    <p>{{ usuario.email }}</p>
+                </div>
+            </div>
+            <div class="p-3">
+                <h2>Categories</h2>
+                <ul>
+                    {% for sugerencia in sugerencias %}
+                    <li>{{ sugerencia }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <!-- Panel Derecho -->
+        <div class="col-md-9 d-flex flex-column">
+            <div class="flex-grow-1 p-3 chat-container" id="chat-content">
+                {% for date, chats in chats_by_date.items %}
+                <h4 style="color: white">{{ date }}</h4>
+                {% for chat in chats %}
+                <div class="mb-3">
+                    <div class="user-message"><strong>Pregunta:</strong> {{ chat.question }}<br><small>{{ chat.timestamp|date:"H:i A" }}</small></div>
+                    <div class="bot-response"><strong>Respuesta:</strong> {{ chat.answer }}<br><small>{{ chat.timestamp|date:"H:i A" }}</small></div>
+                </div>
+                {% endfor %}
+                {% endfor %}
+            </div>
+            <div class="fixed-input">
+                <form id="chat-form" method="post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <textarea id="pregunta" name="pregunta" class="form-control" placeholder="Escribe tu pregunta..." required></textarea>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('chat-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            sendMessage();
+        });
+
+        document.getElementById('pregunta').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const pregunta = document.getElementById('pregunta').value;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            fetch("{% url 'home' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: new URLSearchParams({
+                    'pregunta': pregunta
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const chatContent = document.getElementById('chat-content');
+                const userMessage = document.createElement('div');
+                userMessage.className = 'user-message';
+                userMessage.innerHTML = `<strong>Pregunta:</strong> ${data.pregunta}<br><small>${data.timestamp}</small>`;
+                chatContent.appendChild(userMessage);
+
+                const botResponse = document.createElement('div');
+                botResponse.className = 'bot-response';
+                botResponse.innerHTML = `<strong>Respuesta:</strong> ${data.respuesta}<br><small>${data.timestamp}</small>`;
+                chatContent.appendChild(botResponse);
+
+                document.getElementById('pregunta').value = '';
+                chatContent.scrollTop = chatContent.scrollHeight;
+            });
+        }
+    </script>
+</body>
+</html>

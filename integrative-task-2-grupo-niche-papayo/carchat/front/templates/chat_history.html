@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car ChatBot - Chat History</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .chat-history-container {
+            height: calc(100vh - 150px);
+            overflow-y: auto;
+        }
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            width: 25%;
+            background-color: #f8f9fa;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body class="container-fluid" style="padding: 0%; background-image: url(https://e1.pxfuel.com/desktop-wallpaper/581/154/desktop-wallpaper-backgrounds-for-login-page-login-page.jpg); background-size: cover">
+    <div class="row no-gutters" style="height: 100vh;">
+        <div class="col-md-3 bg-light d-flex flex-column">
+            <div class="p-3">
+                <button class="btn btn-danger btn-block mb-3" onclick="window.location.href='{% url 'logout' %}'">Logout</button>
+                <button class="btn btn-secondary btn-block mb-3" onclick="window.location.href='{% url 'home' %}'">Back to Chat</button>
+                <h3>Historial</h3>
+                <div class="chat-history-container">
+                    <ul class="list-group">
+                        {% if chats %}
+                            {% for chat in chats %}
+                            <li class="list-group-item">
+                                <strong>Pregunta:</strong> {{ chat.question }}<br>
+                                <strong>Respuesta:</strong> {{ chat.answer }}
+                            </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">No hay chats disponibles.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="fixed-footer text-center">
+                <h5>{{ usuario }}</h5>
+                <p>{{ usuario.email }}</p>
+                <button id="delete-history" class="btn btn-danger btn-block">Eliminar Historial</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('delete-history').addEventListener('click', function() {
+            if (confirm('¿Estás seguro de que deseas eliminar todo el historial de chat?')) {
+                fetch("{% url 'delete_history' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert('Error al eliminar el historial.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
